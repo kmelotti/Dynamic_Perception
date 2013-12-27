@@ -488,8 +488,9 @@ void motorStartISR(boolean p_once) {
 
 void motorRunISRSMS() {
   
-  static byte moveCnt = 0;
-  static byte moved   = 0;
+  static byte moveCnt;
+  static byte moved;
+
   
     // we've got to be careful when stopping during a move
   if( motor_flushSMS ) {
@@ -503,21 +504,26 @@ void motorRunISRSMS() {
        // motor is enabled
        if( ! (motors[i].flags & MOTOR_HIGH_FLAG) && motors[i].speed > 0.0) {
          // motor is not currently moving
-          MOTOR_DRV_PREG  |= (B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2)));
+          MOTOR_DRV_PREG  |= (B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2)));   
+          //pin register - sets the appropriate pin to drive the motor for each motor
           motors[i].flags |= MOTOR_HIGH_FLAG; 
+          //sets flag to high to indicate moving
           motors[i].restPeriods = 1;
           moveCnt++;
+          //add to movement count
        }
        else {
-        if( motors[i].restPeriods >= (motor_pwm_maxperiod * motors[i].speed) ) {
+        if( motors[i].restPeriods >= (motor_pwm_maxperiod * motors[i].speed)) {
+          //motor is moving and the rest periods are greater or equal to the distance (in terms of rest periods)
           moved++;
                 // going down, disable output pin
-          MOTOR_DRV_PREG  &= (B11111111 ^ (B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))));
-          motors[i].flags &= (B11111111 ^ MOTOR_HIGH_FLAG);
+          MOTOR_DRV_PREG  &= (~(B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))));  
+          motors[i].flags &= (~MOTOR_HIGH_FLAG);
+          motorStopThis(i);
         }
         else
           motors[i].restPeriods++;       
-     }
+       }
     }
   }
   

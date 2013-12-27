@@ -106,8 +106,10 @@ void uiCheck() {
  static byte            wasSens = sensor_statFlags;
  static unsigned long lastSenTm = 0;
  static boolean       clearSens = false;
+
  
  byte                    button = Menu.checkInput();
+
  
   // check for disabling the LCD backlight
   
@@ -315,6 +317,22 @@ byte uiMainScreen() {
     
   minInt += camera_wait;
   minInt += camera_focus;
+  if (motion_sms)
+  {
+    byte motorEnabled = 0;
+    byte longestMotor = 0;
+    for ( byte i = 0; i < MOTOR_COUNT; i++ )
+    {
+      if (motors[i].flags & MOTOR_UEN_FLAG) {
+        if (motors[i].speed > motors[longestMotor].speed) {    //determine the longest running enabled motor
+          longestMotor = i;
+        }
+        motorEnabled = 1;
+      }
+    }
+      
+    minInt += motorEnabled * motor_pwm_maxperiod * motors[longestMotor].speed * motor_pwm_minperiod / 1000.;  //adds time required by longest running motor
+  }
   
   minInt = minInt / 1000.0;
   
