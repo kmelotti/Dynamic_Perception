@@ -66,6 +66,7 @@ byte              alt_block = 0;
 boolean         disp_metric = 0;
 
 
+
  // initialize core objects
  
  
@@ -122,6 +123,10 @@ void loop() {
 
        // handle UI interaction/updates
    uiCheck();
+   
+   if (!altArraysCompare()){
+     altSetup();
+   }
   
       // if our program is currently running...
       

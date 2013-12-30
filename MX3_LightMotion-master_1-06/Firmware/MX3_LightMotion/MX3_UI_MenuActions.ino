@@ -36,7 +36,7 @@
    
    @author
    C. A. Church
-*/
+
 
 void uiMenuAltInit() {
  lcd.noBlink();
@@ -51,7 +51,7 @@ void uiMenuAltInit() {
  
  delay(2000); 
 }
-
+*/
 
 /** Reset Menu Action
 

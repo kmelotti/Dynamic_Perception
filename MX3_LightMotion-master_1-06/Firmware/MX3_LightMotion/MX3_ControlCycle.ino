@@ -86,6 +86,10 @@ void cycleCamera() {
     
     // trigger any outputs that need to go before the exposure
   if( alt_out_flags & ALT_OUT_ANY_B && cycleShotOK(true) ) {
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Set blocks");
+        delay(3000);
       alt_block = ALT_BLOCK_B;
       altOutStart(ALT_TRIG_B);
       return;

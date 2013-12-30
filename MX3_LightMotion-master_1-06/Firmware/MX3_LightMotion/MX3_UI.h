@@ -312,9 +312,9 @@ MENU_ITEM    ui_it_altad    = { {"Out Aft Time"},    ITEM_VALUE,  0, MENU_TARGET
 MENU_ITEM    ui_it_altat    = { {"Out Aft Trig mS"}, ITEM_VALUE,  0, MENU_TARGET(&ui_in_altat) };
 MENU_ITEM    ui_it_altdir   = { {"In Trigger"},      ITEM_VALUE,  0, MENU_TARGET(&ui_in_altdir) };
 MENU_ITEM    ui_it_althl    = { {"Out Level"},       ITEM_VALUE,  0, MENU_TARGET(&ui_in_althl) };
-MENU_ITEM    ui_it_altset   = { {"Init I/O"},        ITEM_ACTION, 0, MENU_TARGET(uiMenuAltInit) };
+//MENU_ITEM    ui_it_altset   = { {"Init I/O"},        ITEM_ACTION, 0, MENU_TARGET(uiMenuAltInit) };
 
-MENU_LIST    ui_list_alt[]  = { &ui_it_altset, &ui_it_alt1, &ui_it_alt2, &ui_it_alt3, &ui_it_alt4, &ui_it_altdir, &ui_it_altbd, &ui_it_altbt, &ui_it_altad, &ui_it_altat, &ui_it_althl };
+MENU_LIST    ui_list_alt[]  = { &ui_it_alt1, &ui_it_alt2, &ui_it_alt3, &ui_it_alt4, &ui_it_altdir, &ui_it_altbd, &ui_it_altbt, &ui_it_altad, &ui_it_altat, &ui_it_althl };
 MENU_ITEM    ui_it_alt      = { {"Aux I/O"}, ITEM_MENU, MENU_SIZE(ui_list_alt), MENU_TARGET(&ui_list_alt) };
 
  // ===== Sensor Options

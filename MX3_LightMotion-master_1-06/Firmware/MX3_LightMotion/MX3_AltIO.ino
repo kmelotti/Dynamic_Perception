@@ -30,6 +30,7 @@
 
 
 byte             alt_inputs[] = { ALT_OFF, ALT_OFF, ALT_OFF, ALT_OFF };
+byte         alt_inputs_old[] = { ALT_OFF, ALT_OFF, ALT_OFF, ALT_OFF };
 byte            alt_out_flags = 0;
 unsigned int alt_before_delay = 100;
 unsigned int  alt_after_delay = 100;
@@ -283,11 +284,44 @@ void altOutStop() {
   
   // set correct state to either clear to fire, or clear to move
   
-  if( alt_block == ALT_BLOCK_B ) 
+  if( alt_block == ALT_BLOCK_B )
+  {
+     lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("sees block");
+    delay(3000); 
+    lcd.clear();
     Engine.state(ST_CLEAR);
+  }
   else
     Engine.state(ST_MOVE);
     
+}
+
+/** Compares the Alt states each cycle to see if they've changed.
+
+If they've changed it updates the old array to match the new array and returns false.
+
+ @author 
+ Kevin Melotti
+ */
+
+
+bool altArraysCompare()
+{
+  bool equal = true;
+  for (int i = 0; i < sizeof(alt_inputs); i++)
+  {
+   if (alt_inputs[i] != alt_inputs_old[i]){
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("!!!!!!");
+    delay(1000);
+    equal = false;
+    alt_inputs_old[i] = alt_inputs[i]; 
+   }
+  }
+  return equal;
 }
 
 
