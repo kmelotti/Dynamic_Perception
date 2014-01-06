@@ -250,7 +250,6 @@ void altOutStart(byte p_mode) {
     Engine.state(ST_BLOCK);
   }
   else if( p_mode == ALT_TRIG_B ) {
-      // ok to fire shot
     Engine.state(ST_CLEAR);
   }
   else {
@@ -286,15 +285,12 @@ void altOutStop() {
   
   if( alt_block == ALT_BLOCK_B )
   {
-     lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("sees block");
-    delay(3000); 
-    lcd.clear();
     Engine.state(ST_CLEAR);
   }
   else
+  {
     Engine.state(ST_MOVE);
+  }
     
 }
 
@@ -313,10 +309,6 @@ bool altArraysCompare()
   for (int i = 0; i < sizeof(alt_inputs); i++)
   {
    if (alt_inputs[i] != alt_inputs_old[i]){
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("!!!!!!");
-    delay(1000);
     equal = false;
     alt_inputs_old[i] = alt_inputs[i]; 
    }

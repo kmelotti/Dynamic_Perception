@@ -138,6 +138,10 @@ void loop() {
      
        // check current engine state and handle appropriately
      Engine.checkCycle();
+//     lcd.clear();
+//     lcd.setCursor(0,0);
+//     lcd.print(Engine.state());
+//      delay(1000);
    }
    
  
