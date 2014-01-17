@@ -366,11 +366,20 @@ MENU_ITEM    ui_it_glList      = { {"Settings"}, ITEM_MENU, MENU_SIZE(ui_list_gl
 
 // ===== Manual Move Menu
 
+MENU_SELECT_ITEM  ui_sel_holdMove = { MM_HOLD,  {"Yes"} };
+MENU_SELECT_ITEM  ui_sel_selectStop  = { MM_SELECT,   {"No"} };
+MENU_SELECT_LIST  ui_sel_list_mm[]  = { &ui_sel_holdMove, &ui_sel_selectStop };
+
+MENU_SELECT  ui_sl_mmSetting    = { &mmSetting, MENU_SELECT_SIZE(ui_sel_list_mm),    MENU_TARGET(&ui_sel_list_mm) };
+MENU_VALUE   ui_in_mmSetting    = { TYPE_SELECT, 0, 0, MENU_TARGET(&ui_sl_mmSetting),   EE_MMSETTING };
+
+
 MENU_ITEM    ui_it_mm0_man      = { {"Motor 1"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualOne) };
 MENU_ITEM    ui_it_mm1_man      = { {"Motor 2"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualTwo) };
 MENU_ITEM    ui_it_mm2_man      = { {"Motor 3"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualThree) };
+MENU_ITEM    ui_it_mmSetting    = { {"Hold to move?"}, ITEM_VALUE,  0, MENU_TARGET(&ui_in_mmSetting) };
 
-MENU_LIST    ui_list_mm[]      = { &ui_it_mm0_man, &ui_it_mm1_man, &ui_it_mm2_man};
+MENU_LIST    ui_list_mm[]      = { &ui_it_mm0_man, &ui_it_mm1_man, &ui_it_mm2_man, &ui_it_mmSetting};
 MENU_ITEM    ui_it_mm      = { {"Manual Move"}, ITEM_MENU, MENU_SIZE(ui_list_mm), MENU_TARGET(&ui_list_mm) };
 
 

@@ -30,7 +30,6 @@
 
 
 byte             alt_inputs[] = { ALT_OFF, ALT_OFF, ALT_OFF, ALT_OFF };
-byte         alt_inputs_old[] = { ALT_OFF, ALT_OFF, ALT_OFF, ALT_OFF };
 byte            alt_out_flags = 0;
 unsigned int alt_before_delay = 100;
 unsigned int  alt_after_delay = 100;
@@ -40,6 +39,17 @@ boolean        alt_force_shot = false;
 boolean           alt_ext_int = false;
 byte            alt_direction = FALLING;
 byte             alt_out_trig = HIGH;
+
+//Old version of alt i/o variables to compare them to see if they changed while program is running
+byte             alt_inputs_old[] = { ALT_OFF, ALT_OFF, ALT_OFF, ALT_OFF };
+unsigned int alt_before_delay_old = alt_before_delay;
+unsigned int  alt_after_delay_old = alt_after_delay;
+unsigned int    alt_before_ms_old = alt_before_ms;
+unsigned int     alt_after_ms_old = alt_after_ms;
+boolean        alt_force_shot_old = alt_force_shot;
+boolean           alt_ext_int_old = alt_ext_int;
+byte            alt_direction_old = alt_direction;
+byte             alt_out_trig_old = alt_out_trig;
 
 //Pins for the I/O
 const byte           AuxARing = 0;
@@ -158,7 +168,9 @@ void altConnect(byte p_which, byte p_mode) {
  
   if( p_mode == ALT_OFF ) {
       detachInterrupt(p_which);
-      digitalWrite(ALT_START_PIN + p_which, LOW);
+      digitalWrite(ALT_START_PIN + p_which, ! alt_out_trig);
+      alt_out_flags &= ~( ALT_OUT_FLAG_A << p_which );
+      alt_out_flags &= ~( ALT_OUT_FLAG_B << p_which );
       return;
   }
   
@@ -313,6 +325,40 @@ bool altArraysCompare()
     alt_inputs_old[i] = alt_inputs[i]; 
    }
   }
+  
+  if (alt_before_delay != alt_before_delay_old){
+    equal = false;
+    alt_before_delay_old = alt_before_delay;
+  }
+  if (alt_after_delay != alt_after_delay_old){
+    equal = false;
+    alt_after_delay_old = alt_after_delay;
+  }
+  if (alt_before_ms != alt_before_ms_old){
+    equal = false;
+    alt_before_ms_old = alt_before_ms;
+  }
+  if (alt_after_ms != alt_after_ms_old){
+    equal = false;
+    alt_after_ms_old = alt_after_ms;
+  }
+  if (alt_force_shot != alt_force_shot_old){
+    equal = false;
+    alt_force_shot_old = alt_force_shot;
+  }
+  if (alt_ext_int != alt_ext_int_old){
+    equal = false;
+    alt_ext_int_old = alt_ext_int;
+  }
+  if (alt_direction != alt_direction_old){
+    equal = false;
+    alt_direction_old = alt_direction;
+  }
+  if (alt_out_trig != alt_out_trig_old){
+    equal = false;
+    alt_out_trig_old = alt_out_trig;
+  }
+  
   return equal;
 }
 

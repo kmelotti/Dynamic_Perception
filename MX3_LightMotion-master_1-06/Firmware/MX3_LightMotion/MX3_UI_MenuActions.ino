@@ -624,76 +624,79 @@ void uiMenuManual(byte p_motor) {
     return;
   }
   
-    // disable menu processing so we can watch
-    // user input
-  Menu.enable(false);
-
-  lcd.clear();
-  lcd.print(STR_RES2);
- 
-   // user-enable motor (necessary if the user had it disabled)
-  motors[p_motor].flags |= MOTOR_UEN_FLAG;
+  //Check to see if the user wants to move the motor by holding the button down or not
+  if (mmSetting = MM_HOLD){
+    
+      // disable menu processing so we can watch
+      // user input
+    Menu.enable(false);
   
-  // need to do this for the use of uiCursorChangeMotSpd below
-  ui_curMotor = p_motor;
+    lcd.clear();
+    lcd.print(STR_RES2);
+   
+     // user-enable motor (necessary if the user had it disabled)
+    motors[p_motor].flags |= MOTOR_UEN_FLAG;
+    
+    // need to do this for the use of uiCursorChangeMotSpd below
+    ui_curMotor = p_motor;
+    
+    while( 1 ) {
+         
   
-  while( 1 ) {
-       
-
-    int buttonValue = analogRead(BUT_PIN); 
-  
-    byte button = Menu.checkInput();
+      int buttonValue = analogRead(BUT_PIN); 
     
-    lcd.setCursor(0, 1);
-    lcd.print(spd*100, 2); 
-    lcd.print("% ");
-    
-    //Moves the motor based on which button is being pressed        
-    if (button == BUTTON_FORWARD || button == BUTTON_BACK){
+      byte button = Menu.checkInput();
       
-      byte dir = (button == BUTTON_BACK) ? 0 : 1;
-      motorDir(p_motor, dir);
-      motorSpeed(p_motor, spd);
-      motorRun(false, p_motor);
-      run = true;
+      lcd.setCursor(0, 1);
+      lcd.print(spd*100, 2); 
+      lcd.print("% ");
       
-      //Sets the lower and upper boundaries for the analog button depending on which button is pressed
-      int lowerBound = ((button == BUTTON_BACK) ? BUTREV_VAL : BUTFWD_VAL) - BUT_THRESH;
-      int upperBound = ((button == BUTTON_BACK) ? BUTREV_VAL : BUTFWD_VAL) + BUT_THRESH;
+      //Moves the motor based on which button is being pressed        
+      if (button == BUTTON_FORWARD || button == BUTTON_BACK){
+        
+        byte dir = (button == BUTTON_BACK) ? 0 : 1;
+        motorDir(p_motor, dir);
+        motorSpeed(p_motor, spd);
+        motorRun(false, p_motor);
+        run = true;
+        
+        //Sets the lower and upper boundaries for the analog button depending on which button is pressed
+        int lowerBound = ((button == BUTTON_BACK) ? BUTREV_VAL : BUTFWD_VAL) - BUT_THRESH;
+        int upperBound = ((button == BUTTON_BACK) ? BUTREV_VAL : BUTFWD_VAL) + BUT_THRESH;
+        
+        //Keeps the motor running while the button is held down      
+        while( lowerBound <= buttonValue && buttonValue <= upperBound) {    
+          buttonValue = analogRead(BUT_PIN);
+        } 
+        
+        //stops the motors after the button is released
+        motorStop();
+        run = false;
+        
+      }// end if( button == BUTTON_FORWARD...
       
-      //Keeps the motor running while the button is held down      
-      while( lowerBound <= buttonValue && buttonValue <= upperBound) {    
-        buttonValue = analogRead(BUT_PIN);
-      } 
+      //Adjust the speed of the motor
+      if( button == BUTTON_INCREASE || button == BUTTON_DECREASE ) {
+        float dir = (button == BUTTON_INCREASE) ? 0.25 : -0.25;
+        spd += dir;
+        if (spd >= 1.00)
+          spd = 1.00;
+        else if (spd <= 0.25)
+          spd = 0.25;
+      }
       
-      //stops the motors after the button is released
-      motorStop();
-      run = false;
+      // enter exits, recover state and exit action
+      if( button == BUTTON_SELECT ) {
+        ui_curMotor = wasMotor;
+        motorStop();
+        motors[p_motor].flags = wasFlags;
+        motorSpeed(p_motor, wasSpd);
+        Menu.enable(true);
+        return;      
+      }    
       
-    }// end if( button == BUTTON_FORWARD...
-    
-    //Adjust the speed of the motor
-    if( button == BUTTON_INCREASE || button == BUTTON_DECREASE ) {
-      float dir = (button == BUTTON_INCREASE) ? 0.25 : -0.25;
-      spd += dir;
-      if (spd >= 1.00)
-        spd = 1.00;
-      else if (spd <= 0.25)
-        spd = 0.25;
-    }
-    
-    // enter exits, recover state and exit action
-    if( button == BUTTON_SELECT ) {
-      ui_curMotor = wasMotor;
-      motorStop();
-      motors[p_motor].flags = wasFlags;
-      motorSpeed(p_motor, wasSpd);
-      Menu.enable(true);
-      return;      
-    }    
-    
-  } // end while
-      
+    } // end while
+  }       
 }
 
 void uiMenuManualOne() {

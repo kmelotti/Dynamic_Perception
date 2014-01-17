@@ -54,6 +54,9 @@ unsigned int motor_inRamp = 0;
 
 boolean motor_flushSMS = false;
 
+//Manaual move setting - 0 for hold to move, 1 for select to stop
+byte mmSetting = 0;
+
  // create an array of structures for our three motors
 
 MotorDefinition motors[] = { MotorDefinition(), MotorDefinition(), MotorDefinition() };
