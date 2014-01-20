@@ -625,7 +625,7 @@ void uiMenuManual(byte p_motor) {
   }
   
   //Check to see if the user wants to move the motor by holding the button down or not
-  if (mmSetting = MM_HOLD){
+  if (mmSetting == MM_HOLD){
     
       // disable menu processing so we can watch
       // user input
@@ -648,7 +648,7 @@ void uiMenuManual(byte p_motor) {
       byte button = Menu.checkInput();
       
       lcd.setCursor(0, 1);
-      lcd.print(spd*100, 2); 
+      lcd.print(spd*100, 0); 
       lcd.print("% ");
       
       //Moves the motor based on which button is being pressed        
@@ -696,7 +696,67 @@ void uiMenuManual(byte p_motor) {
       }    
       
     } // end while
-  }       
+  } else { 
+  
+    Menu.enable(false);
+  
+    lcd.clear();
+    lcd.print(STR_RES2);
+   
+     // user-enable motor (necessary if the user had it disabled)
+    motors[p_motor].flags |= MOTOR_UEN_FLAG;
+    
+    // need to do this for the use of uiCursorChangeMotSpd below
+    ui_curMotor = p_motor;
+    
+    while( 1 ) {
+         
+ 
+      byte       button = Menu.checkInput();
+      
+      lcd.setCursor(0, 1);
+      lcd.print(spd*100, 0); 
+      lcd.print("% "); 
+      
+      if( button == BUTTON_FORWARD || button == BUTTON_BACK ) {
+          // if not already running, run it
+        if( ! run ) {
+          byte dir = (button == BUTTON_FORWARD) ? 1 : 0;
+          motorDir(p_motor, dir);
+          motorSpeed(p_motor, spd);
+          motorRun(false, p_motor);
+          run = true;
+        }
+        else {
+            // already running, stop the motor
+          motorStop();
+          run = false;
+        }
+      } // end if( button == BUTTON_FORWARD...
+      else {
+          // not forward or back
+        
+        if( button == BUTTON_INCREASE || button == BUTTON_DECREASE ) {
+          float dir = (button == BUTTON_INCREASE) ? 0.1 : -0.1;
+          spd += dir;
+          if (spd >= 1.00)
+            spd = 1.00;
+          else if (spd <= 0.1)
+            spd = 0.1;
+          motorSpeed(p_motor, spd);
+        }
+        else if( button == BUTTON_SELECT ) {
+            // enter exits, recover state and exit action
+          ui_curMotor = wasMotor;
+          motorStop();
+          motors[p_motor].flags = wasFlags;
+          motorSpeed(p_motor, wasSpd);
+          Menu.enable(true);
+          return;
+        }
+      }
+    }  
+  }
 }
 
 void uiMenuManualOne() {

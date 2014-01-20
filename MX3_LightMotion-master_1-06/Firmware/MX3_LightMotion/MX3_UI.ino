@@ -297,10 +297,10 @@ void uiBaseScreen(byte p_button) {
   }
  
    // if cursor input is enabled, re-seek cursor to correct position, enables blinking
-  if( ui_cursor.enabled )
+  if( ui_cursor.enabled ){
     lcd.setCursor(ui_cursor.col, ui_cursor.row);
     lcd.blink();
-    
+  }
 }
 
 /** Main Display Screen */
@@ -506,10 +506,7 @@ void uiMotorScreen(byte p_motor) {
     uiPad(3, def->ramp_start);
   else
     lcd.print(STR_AST);
-    
-  //lcd.setCursor(17,0);   //moves cursor off screen, prevents a blinking cursor from showing up at the end
-  
-  
+      
 }
 
 
@@ -534,6 +531,7 @@ void uiScreenInput(byte p_screen, byte p_button) {
   static byte uiPos     = 0;
 
   byte action = 0;
+  
 
     // reset cursor if screen has changed
   if( p_screen != wasScreen ) {
@@ -542,7 +540,19 @@ void uiScreenInput(byte p_screen, byte p_button) {
         ui_cursor.enabled = 0;
           // in case a new menu root was set as a special menu
           // for a cursor item
-        Menu.setRoot(&ui_it_root);
+          //check what screen it's on to determine the root menu from that screen
+        if (p_screen == UI_SCREEN_MOTOR1){
+          Menu.setRoot(&ui_it_m0List);
+        }
+        else if (p_screen == UI_SCREEN_MOTOR2){
+          Menu.setRoot(&ui_it_m1List);
+        }
+        else if (p_screen == UI_SCREEN_MOTOR3) {
+          Menu.setRoot(&ui_it_m2List);
+        }
+        else {
+          Menu.setRoot(&ui_it_root);
+        }
   }
 
 
@@ -571,7 +581,18 @@ void uiScreenInput(byte p_screen, byte p_button) {
   if( uiPos == 0 ) {
     ui_cursor.enabled = 0;
     lcd.noBlink();
-    Menu.setRoot(&ui_it_root);
+    if (p_screen == UI_SCREEN_MOTOR1){
+      Menu.setRoot(&ui_it_m0List);
+    }
+    else if (p_screen == UI_SCREEN_MOTOR2){
+      Menu.setRoot(&ui_it_m1List);
+    }
+    else if (p_screen == UI_SCREEN_MOTOR3) {
+      Menu.setRoot(&ui_it_m2List);
+    }
+    else {
+      Menu.setRoot(&ui_it_root);
+    }
     return;
   }
 
@@ -590,8 +611,20 @@ void uiScreenInput(byte p_screen, byte p_button) {
     // set new root menu for enter being pressed...
   if( target->mnu != 0 )
     Menu.setRoot(target->mnu);
-  else
-    Menu.setRoot(&ui_it_root);
+  else {
+    if (p_screen == UI_SCREEN_MOTOR1){
+      Menu.setRoot(&ui_it_m0List);
+    }
+    else if (p_screen == UI_SCREEN_MOTOR2){
+      Menu.setRoot(&ui_it_m1List);
+    }
+    else if (p_screen == UI_SCREEN_MOTOR3) {
+      Menu.setRoot(&ui_it_m2List);
+    }
+    else {
+      Menu.setRoot(&ui_it_root);
+    }
+  }
   
   
   if( action ) {

@@ -1,3 +1,5 @@
+
+
 /* 
 
    MX3 LightMotion Firmware
@@ -215,6 +217,26 @@ MENU_ITEM    ui_it_camList     = { {"Camera"}, ITEM_MENU, MENU_SIZE(ui_list_cam)
 
 
   // ======= Motor Menus
+  
+
+// ===== Manual Move Menu
+
+MENU_SELECT_ITEM  ui_sel_holdMove = { MM_HOLD,  {"Hold"} };
+MENU_SELECT_ITEM  ui_sel_selectStop  = { MM_SELECT,   {"Start/Stop"} };
+MENU_SELECT_LIST  ui_sel_list_mm[]  = { &ui_sel_holdMove, &ui_sel_selectStop };
+
+MENU_SELECT  ui_sl_mmSetting    = { &mmSetting, MENU_SELECT_SIZE(ui_sel_list_mm),    MENU_TARGET(&ui_sel_list_mm) };
+MENU_VALUE   ui_in_mmSetting    = { TYPE_SELECT, 0, 0, MENU_TARGET(&ui_sl_mmSetting),   EE_MMSETTING };
+
+
+MENU_ITEM    ui_it_mm0_man      = { {"Motor 1"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualOne) };
+MENU_ITEM    ui_it_mm1_man      = { {"Motor 2"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualTwo) };
+MENU_ITEM    ui_it_mm2_man      = { {"Motor 3"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualThree) };
+MENU_ITEM    ui_it_mmSetting    = { {"Movement Type"}, ITEM_VALUE,  0, MENU_TARGET(&ui_in_mmSetting) };
+
+MENU_LIST    ui_list_mm[]      = { &ui_it_mmSetting, &ui_it_mm0_man, &ui_it_mm1_man, &ui_it_mm2_man };
+MENU_ITEM    ui_it_mm      = { {"Manual Move"}, ITEM_MENU, MENU_SIZE(ui_list_mm), MENU_TARGET(&ui_list_mm) };  
+  
 
   // motor 1 inputs
   
@@ -233,7 +255,7 @@ MENU_ITEM    ui_it_m0_flip     = { {"Invert Dir"},   ITEM_VALUE,  0, MENU_TARGET
 MENU_ITEM    ui_it_m0_rpm      = { {"RPM"},          ITEM_VALUE,  0, MENU_TARGET(&ui_in_m0_rpm) };
 MENU_ITEM    ui_it_m0_ratio    = { {"Ratio"},        ITEM_VALUE,  0, MENU_TARGET(&ui_in_m0_ratio) };
 
-MENU_LIST    ui_list_m0[]      = { &ui_it_m0_pres, &ui_it_m0_man, &ui_it_m0_rot, &ui_it_m0_flip, &ui_it_m0_rpm, &ui_it_m0_ratio };
+MENU_LIST    ui_list_m0[]      = { &ui_it_m0_man, &ui_it_m0_pres, &ui_it_m0_rot, &ui_it_m0_flip, &ui_it_m0_rpm, &ui_it_m0_ratio, &ui_it_mmSetting };
 MENU_ITEM    ui_it_m0List      = { {"Axis 1"}, ITEM_MENU, MENU_SIZE(ui_list_m0), MENU_TARGET(&ui_list_m0) };
 
   // motor 2 inputs
@@ -253,7 +275,7 @@ MENU_ITEM    ui_it_m1_flip     = { {"Invert Dir"},   ITEM_VALUE,  0, MENU_TARGET
 MENU_ITEM    ui_it_m1_rpm      = { {"RPM"},          ITEM_VALUE,  0, MENU_TARGET(&ui_in_m1_rpm) };
 MENU_ITEM    ui_it_m1_ratio    = { {"Ratio"},        ITEM_VALUE,  0, MENU_TARGET(&ui_in_m1_ratio) };
 
-MENU_LIST    ui_list_m1[]      = { &ui_it_m1_pres, &ui_it_m1_man, &ui_it_m1_rot, &ui_it_m1_flip, &ui_it_m1_rpm, &ui_it_m1_ratio };
+MENU_LIST    ui_list_m1[]      = { &ui_it_m1_man, &ui_it_m1_pres, &ui_it_m1_rot, &ui_it_m1_flip, &ui_it_m1_rpm, &ui_it_m1_ratio, &ui_it_mmSetting };
 MENU_ITEM    ui_it_m1List      = { {"Axis 2"}, ITEM_MENU, MENU_SIZE(ui_list_m1), MENU_TARGET(&ui_list_m1) };
 
   // motor 3 inputs
@@ -273,7 +295,7 @@ MENU_ITEM    ui_it_m2_flip     = { {"Invert Dir"},   ITEM_VALUE,  0, MENU_TARGET
 MENU_ITEM    ui_it_m2_rpm      = { {"RPM"},          ITEM_VALUE,  0, MENU_TARGET(&ui_in_m2_rpm) };
 MENU_ITEM    ui_it_m2_ratio    = { {"Ratio"},        ITEM_VALUE,  0, MENU_TARGET(&ui_in_m2_ratio) };
 
-MENU_LIST    ui_list_m2[]      = { &ui_it_m2_pres, &ui_it_m2_man, &ui_it_m2_rot, &ui_it_m2_flip, &ui_it_m2_rpm, &ui_it_m2_ratio };
+MENU_LIST    ui_list_m2[]      = { &ui_it_m2_man, &ui_it_m2_pres, &ui_it_m2_rot, &ui_it_m2_flip, &ui_it_m2_rpm, &ui_it_m2_ratio, &ui_it_mmSetting };
 MENU_ITEM    ui_it_m2List      = { {"Axis 3"}, ITEM_MENU, MENU_SIZE(ui_list_m2), MENU_TARGET(&ui_list_m2) };
 
 
@@ -364,23 +386,6 @@ MENU_ITEM    ui_it_glJmp       = { {"Jump!"},           ITEM_ACTION, 0, MENU_TAR
 MENU_LIST    ui_list_gl[]      = { &ui_it_alt, &ui_it_sen, &ui_it_glMet, &ui_it_glLCD, &ui_it_glPer,  &ui_it_glHet, &ui_it_glVFD, &ui_it_glSav, &ui_it_glLod, &ui_it_glMem, &ui_it_glJmp };
 MENU_ITEM    ui_it_glList      = { {"Settings"}, ITEM_MENU, MENU_SIZE(ui_list_gl), MENU_TARGET(&ui_list_gl) };
 
-// ===== Manual Move Menu
-
-MENU_SELECT_ITEM  ui_sel_holdMove = { MM_HOLD,  {"Yes"} };
-MENU_SELECT_ITEM  ui_sel_selectStop  = { MM_SELECT,   {"No"} };
-MENU_SELECT_LIST  ui_sel_list_mm[]  = { &ui_sel_holdMove, &ui_sel_selectStop };
-
-MENU_SELECT  ui_sl_mmSetting    = { &mmSetting, MENU_SELECT_SIZE(ui_sel_list_mm),    MENU_TARGET(&ui_sel_list_mm) };
-MENU_VALUE   ui_in_mmSetting    = { TYPE_SELECT, 0, 0, MENU_TARGET(&ui_sl_mmSetting),   EE_MMSETTING };
-
-
-MENU_ITEM    ui_it_mm0_man      = { {"Motor 1"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualOne) };
-MENU_ITEM    ui_it_mm1_man      = { {"Motor 2"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualTwo) };
-MENU_ITEM    ui_it_mm2_man      = { {"Motor 3"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualThree) };
-MENU_ITEM    ui_it_mmSetting    = { {"Hold to move?"}, ITEM_VALUE,  0, MENU_TARGET(&ui_in_mmSetting) };
-
-MENU_LIST    ui_list_mm[]      = { &ui_it_mm0_man, &ui_it_mm1_man, &ui_it_mm2_man, &ui_it_mmSetting};
-MENU_ITEM    ui_it_mm      = { {"Manual Move"}, ITEM_MENU, MENU_SIZE(ui_list_mm), MENU_TARGET(&ui_list_mm) };
 
 
 
