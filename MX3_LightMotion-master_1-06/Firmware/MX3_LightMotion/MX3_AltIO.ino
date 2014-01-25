@@ -168,7 +168,8 @@ void altConnect(byte p_which, byte p_mode) {
  
   if( p_mode == ALT_OFF ) {
       detachInterrupt(p_which);
-      digitalWrite(ALT_START_PIN + p_which, ! alt_out_trig);
+      pinMode(ALT_START_PIN + p_which, INPUT);
+      //digitalWrite(ALT_START_PIN + p_which, ! alt_out_trig);
       alt_out_flags &= ~( ALT_OUT_FLAG_A << p_which );
       alt_out_flags &= ~( ALT_OUT_FLAG_B << p_which );
       return;

@@ -79,8 +79,8 @@ const int BUT_MAP[5][2] = {
 // ====== Memory Strings Used in the UI ========
 
 const char MX3_VERSTR[]  =  "LightMotion";
-const char MX3_SUBSTR[]  =  "v.1.05 Badger   ";
-const char MX3_C1STR[]   =  "(c) 2013 Dynamic";
+const char MX3_SUBSTR[]  =  "v.1.06 Raptor  ";
+const char MX3_C1STR[]   =  "(c) 2014 Dynamic";
 const char MX3_C2STR[]   =  "Perception";
   // run, stop, and ext must be exact same length, pad with spaces
 const char STR_RUN[]     =  "On ";
@@ -92,7 +92,7 @@ const char STR_BULB[]    =  "B ";
 const char STR_ECAM[]    =  "C ";
 const char STR_BUSY[]    =  "Busy";
 const char STR_IDLE[]    =  "Idle";
-const char STR_MOTOR[]   =  "Motor ";
+const char STR_MOTOR[]   =  "Axis ";
 const char STR_LEFT      =  'L';
 const char STR_RIGHT     =  'R';
 const char STR_CW        =  '+';
@@ -229,9 +229,9 @@ MENU_SELECT  ui_sl_mmSetting    = { &mmSetting, MENU_SELECT_SIZE(ui_sel_list_mm)
 MENU_VALUE   ui_in_mmSetting    = { TYPE_SELECT, 0, 0, MENU_TARGET(&ui_sl_mmSetting),   EE_MMSETTING };
 
 
-MENU_ITEM    ui_it_mm0_man      = { {"Motor 1"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualOne) };
-MENU_ITEM    ui_it_mm1_man      = { {"Motor 2"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualTwo) };
-MENU_ITEM    ui_it_mm2_man      = { {"Motor 3"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualThree) };
+MENU_ITEM    ui_it_mm0_man      = { {"Axis 1"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualOne) };
+MENU_ITEM    ui_it_mm1_man      = { {"Axis 2"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualTwo) };
+MENU_ITEM    ui_it_mm2_man      = { {"Axis 3"},  ITEM_ACTION, 0, MENU_TARGET(uiMenuManualThree) };
 MENU_ITEM    ui_it_mmSetting    = { {"Movement Type"}, ITEM_VALUE,  0, MENU_TARGET(&ui_in_mmSetting) };
 
 MENU_LIST    ui_list_mm[]      = { &ui_it_mmSetting, &ui_it_mm0_man, &ui_it_mm1_man, &ui_it_mm2_man };
@@ -508,7 +508,7 @@ const uiDisplayCursorTarget* ui_dctl_cam[]   = { &ui_ct_cam1, &ui_ct_cam2, &ui_c
 const uiDisplayCursors       ui_dc_cam       = { DCT_SIZE(ui_dctl_cam), DCT_PTR(&ui_dctl_cam) };
 
  // motor screens
-const uiDisplayCursorTarget  ui_ct_mot1      = { 0, 8,  uiCursorChangeMotEn,   0 };
+const uiDisplayCursorTarget  ui_ct_mot1      = { 0, 7,  uiCursorChangeMotEn,   0 };
 const uiDisplayCursorTarget  ui_ct_mot2      = { 1, 0,  uiCursorChangeMotDir,  0 };
 const uiDisplayCursorTarget  ui_ct_mot3      = { 1, 2,  uiCursorChangeMotSpd,  0 };
 const uiDisplayCursorTarget  ui_ct_mot4      = { 0, 13, uiCursorChangeMotLead, 0 };

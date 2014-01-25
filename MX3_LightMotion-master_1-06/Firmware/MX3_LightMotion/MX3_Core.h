@@ -226,6 +226,9 @@ struct MotorDefinition {
    /** Volatile, used by motor_run_isr for overflow */
  volatile unsigned long restPeriods;
  
+ /** needed to change the speed of the motor for SMS mode */ 
+ int smsOnPeriods;
+ 
   /** Time Periods (on periods for every off period) */
  float onTimePeriods;
  
@@ -272,6 +275,7 @@ struct MotorDefinition {
    setSpeed = 0.01;
    forceRampStart = 0;
    startShots = 0;
+   smsOnPeriods = 0;
  }
  
 };
@@ -287,7 +291,7 @@ struct MotorDefinition {
 
  // stored memory layout version
  // this number MUST be changed every time the memory layout is changed
-const unsigned int MEMORY_VERSION    = 35;
+const unsigned int MEMORY_VERSION    = 36;
 
 
 /* Locations of each variable to be stored, note correct spacing

@@ -317,6 +317,17 @@ byte uiMainScreen() {
     
   minInt += camera_wait;
   minInt += camera_focus;
+  
+  if(alt_out_flags & ALT_OUT_ANY_B){ //checks to see if any aux i/o are on befroe the camera shoots
+   minInt += alt_before_ms;
+   minInt += alt_before_delay;
+  }
+  
+  if(alt_out_flags & ALT_OUT_ANY_A) { //checks to see if any aux i/o are on after the camera shoots
+   minInt += alt_after_ms;
+   minInt += alt_after_delay;
+  }
+  
   if (motion_sms)
   {
     byte motorEnabled = 0;

@@ -737,12 +737,12 @@ void uiMenuManual(byte p_motor) {
           // not forward or back
         
         if( button == BUTTON_INCREASE || button == BUTTON_DECREASE ) {
-          float dir = (button == BUTTON_INCREASE) ? 0.1 : -0.1;
+          float dir = (button == BUTTON_INCREASE) ? 0.25 : -0.25;
           spd += dir;
           if (spd >= 1.00)
             spd = 1.00;
-          else if (spd <= 0.1)
-            spd = 0.1;
+          else if (spd <= 0.25)
+            spd = 0.25;
           motorSpeed(p_motor, spd);
         }
         else if( button == BUTTON_SELECT ) {

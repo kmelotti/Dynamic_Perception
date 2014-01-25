@@ -57,6 +57,9 @@ boolean motor_flushSMS = false;
 //Manaual move setting - 0 for hold to move, 1 for select to stop
 byte mmSetting = 0;
 
+//SMS on period ration - determines the speed of the motor in SMS mode, periodsOn/periodsOff
+float smsOnPeriodRatio = 4;
+
  // create an array of structures for our three motors
 
 MotorDefinition motors[] = { MotorDefinition(), MotorDefinition(), MotorDefinition() };
@@ -493,6 +496,8 @@ void motorRunISRSMS() {
   
   static byte moveCnt;
   static byte moved;
+  
+  
 
   
     // we've got to be careful when stopping during a move
@@ -507,25 +512,35 @@ void motorRunISRSMS() {
        // motor is enabled
        if( ! (motors[i].flags & MOTOR_HIGH_FLAG) && motors[i].speed > 0.0) {
          // motor is not currently moving
-          MOTOR_DRV_PREG  |= (B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2)));   
-          //pin register - sets the appropriate pin to drive the motor for each motor
-          motors[i].flags |= MOTOR_HIGH_FLAG; 
-          //sets flag to high to indicate moving
-          motors[i].restPeriods = 1;
-          moveCnt++;
-          //add to movement count
+         MOTOR_DRV_PREG  |= (B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))); 
+         //pin register - sets the appropriate pin to drive the motor for each motor
+         motors[i].flags |= MOTOR_HIGH_FLAG; 
+         //sets flag to high to indicate moving
+         motors[i].restPeriods = 1;
+         motors[i].smsOnPeriods++;
+         moveCnt++;
+         //add to movement count
        }
-       else {
-        if( motors[i].restPeriods >= (motor_pwm_maxperiod * motors[i].speed)) {
-          //motor is moving and the rest periods are greater or equal to the distance (in terms of rest periods)
-          moved++;
+       else {     
+         if( motors[i].restPeriods >= (motor_pwm_maxperiod * motors[i].speed)) {
+           //motor is moving and the rest periods are greater or equal to the distance (in terms of rest periods)
+           moved++;
                 // going down, disable output pin
-          MOTOR_DRV_PREG  &= (~(B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))));  
-          motors[i].flags &= (~MOTOR_HIGH_FLAG);
-          motorStopThis(i);
-        }
-        else
-          motors[i].restPeriods++;       
+           MOTOR_DRV_PREG  &= (~(B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))));  
+           motors[i].flags &= (~MOTOR_HIGH_FLAG);
+           motorStopThis(i);
+         }
+         else {
+           if (motors[i].smsOnPeriods < smsOnPeriodRatio){
+             MOTOR_DRV_PREG  |= (B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))); 
+             motors[i].smsOnPeriods++;
+           }             
+           else {
+             MOTOR_DRV_PREG  &= (~(B00000001 << (i*3 + ((motors[i].flags & MOTOR_CDIR_FLAG) >> 2))));
+             motors[i].smsOnPeriods = 0;
+           }
+           motors[i].restPeriods++;       
+         }
        }
     }
   }
